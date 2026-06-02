@@ -1,0 +1,46 @@
+{% extends "invoices/base.html" %}
+
+{% block content %}
+<h2>All Invoices</h2>
+
+{% if invoices %}
+<table class="table table-bordered table-hover mt-3">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Client</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for invoice in invoices %}
+        <tr>
+            <td>{{ invoice.invoice_number }}</td>
+            <td>{{ invoice.client.name }}</td>
+            <td>{{ invoice.due_date }}</td>
+            <td>
+                <span class="badge 
+                    {% if invoice.status == 'paid' %}bg-success
+                    {% elif invoice.status == 'sent' %}bg-warning
+                    {% else %}bg-secondary{% endif %}">
+                    {{ invoice.get_status_display }}
+                </span>
+            </td>
+            <td>{{ invoice.total_amount }} ৳</td>
+            <td>
+                <a href="/invoices/{{ invoice.pk }}/" class="btn btn-sm btn-info">View</a>
+                <a href="/invoices/{{ invoice.pk }}/pdf/" class="btn btn-sm btn-danger">PDF</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info mt-4">
+    No invoices yet. <a href="/invoices/create/">Create your first one</a>.
+</div>
+{% endif %}
+{% endblock %}

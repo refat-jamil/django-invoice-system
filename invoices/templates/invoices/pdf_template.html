@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Invoice</title>
+
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: #fff;
+    margin: 0;
+    padding: 30px;
+    color: #111;
+  }
+
+  .invoice {
+    max-width: 850px;
+    margin: auto;
+    border: 2px solid #000;
+    padding: 40px;
+  }
+
+  .gold {
+    color: #bfa46f;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  .header img {
+    height: 60px;
+    margin-bottom: 10px;
+  }
+
+  .header h2 {
+    margin: 0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .invoice-no {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+
+  .line {
+    border-top: 2px solid #bfa46f;
+    margin: 20px 0;
+  }
+
+  /* LEFT CLIENT BOX */
+  .client {
+    text-align: left;
+    margin-bottom: 25px;
+  }
+
+  .client h4 {
+    margin-bottom: 8px;
+    color: #bfa46f;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .client p {
+    margin: 3px 0;
+    font-size: 14px;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    border-bottom: 2px solid #000;
+    padding: 10px 0;
+    text-align: left;
+    font-size: 13px;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+  }
+
+  .right {
+    text-align: right;
+  }
+
+  /* TOTAL */
+  .total {
+    text-align: right;
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .total span {
+    color: #bfa46f;
+  }
+
+  /* NOTES */
+  .notes {
+    margin-top: 25px;
+    border-left: 3px solid #bfa46f;
+    padding-left: 15px;
+  }
+
+  @media print {
+    body { padding: 0; }
+    .invoice { border: none; }
+  }
+</style>
+
+</head>
+
+<body>
+
+<div class="invoice">
+
+  <!-- HEADER -->
+  <div class="header">
+
+{% if business.logo %}
+    <img src="{{ business.logo.url }}" style="height:100px;">
+{% endif %}
+
+    <h2>{{ business.name }}</h2>
+    <p>{{ business.email }} | {{ business.phone }}</p>
+
+    <div class="invoice-no gold">
+      INVOICE #{{ invoice.invoice_number }}
+    </div>
+
+  </div>
+
+  <div class="line"></div>
+
+  <!-- CLIENT (LEFT SIDE) -->
+  <div class="client">
+    <h4>Bill To</h4>
+    <strong>{{ invoice.client_name }}</strong><br>
+    {{ invoice.client_email }}<br>
+    {{ invoice.client_phone }}<br>
+    {{ invoice.client_address }}
+  </div>
+
+  <!-- ITEMS -->
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Qty</th>
+        <th class="right">Unit</th>
+        <th class="right">Total</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for item in invoice.items.all %}
+      <tr>
+        <td>{{ item.description }}</td>
+        <td>{{ item.quantity }}</td>
+        <td class="right">{{ item.unit_price }} ৳</td>
+        <td class="right">{{ item.total }} ৳</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- TOTAL -->
+  <div class="total">
+    Total: <span>{{ invoice.total_amount }} ৳</span>
+  </div>
+
+  <!-- NOTES -->
+  {% if invoice.notes %}
+  <div class="notes">
+    <strong class="gold">Notes:</strong><br>
+    {{ invoice.notes }}
+  </div>
+  {% endif %}
+
+</div>
+
+</body>
+</html>
